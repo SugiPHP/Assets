@@ -1,0 +1,23 @@
+{
+    "name": "sugiphp/assets",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Plamen Popov",
+            "email": "tzappa@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "kriswallsmith/assetic": "1.1.*",
+        "natxet/CssMin": "dev-master",
+        "leafo/lessphp": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { 
+            "SugiPHP\\Assets\\": ""
+        }
+    },
+    "target-dir": "SugiPHP/Assets",
+    "minimum-stability": "dev"
+}
