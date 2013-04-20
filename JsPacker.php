@@ -10,25 +10,21 @@ namespace SugiPHP\Assets;
 
 use Assetic\Factory\AssetFactory;
 use Assetic\FilterManager;
-use Assetic\Filter\LessphpFilter;
-use Assetic\Filter\CssMinFilter;
 
-class CssPacker extends AbstractPacker
+class JsPacker extends AbstractPacker
 {
 	/**
-	 * CSSpacker constructor
+	 * JsPacker constructor
 	 * 
 	 * @param array $config
 	 */
 	public function __construct(array $config)
 	{
 		parent::__construct($config);
-		// Used to determine if we need to load LessPHP filter
-		$this->config["less_filter"] = false;
 	}
 
 	/**
-	 * Adds css file(s)
+	 * Adds JS file(s)
 	 * 
 	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
 	 */
@@ -38,11 +34,6 @@ class CssPacker extends AbstractPacker
 
 		// Check one by one and throw an exception if the file is not found
 		foreach ($assets as $asset) {
-			// if it is a less file than we'll need LessPHP filter
-			if (strpos($asset, ".less") !== false) {
-				$this->config["less_filter"] = true;
-			}
-
 			$this->addAsset($asset);
 		}
 	}
@@ -51,7 +42,7 @@ class CssPacker extends AbstractPacker
 	{
 		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
 
-		return "_".substr(sha1($str), 0, 11).".css";
+		return "_".substr(sha1($str), 0, 11).".js";
 	}
 
 	protected function dumpAssets()
@@ -61,10 +52,7 @@ class CssPacker extends AbstractPacker
 		$buffer = "";
 
 		foreach ($this->assets as $asset) {
-			if (substr($asset, -5) === ".less") {
-				$filters[] = "less";
-			}
-			$filters[] = "?min";
+			$filters[] = "?jshrink";
 			$assetObj = $factory->createAsset($asset, $filters);
 			$buffer .= $assetObj->dump();
 		}
@@ -80,11 +68,7 @@ class CssPacker extends AbstractPacker
 		// add a FilterManager to the AssetFactory
 		$fm = new FilterManager();
 		$factory->setFilterManager($fm);
-		// adding some filters to the filter manager
-		if ($this->config["less_filter"]) {
-			$fm->set("less", new LessphpFilter());
-		}
-		$fm->set("min", new CssMinFilter());
+		$fm->set("jshrink", new JShrinkFilter());
 
 		return $factory;
 	}

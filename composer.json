@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.3",
         "kriswallsmith/assetic": "1.1.*",
-        "natxet/CssMin": "dev-master"
+        "natxet/CssMin": "dev-master",
+        "tedivm/jshrink": "0.5.*"
     },
     "require-dev": {
         "leafo/lessphp": "dev-master"

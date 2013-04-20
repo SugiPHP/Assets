@@ -56,10 +56,10 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(), $css->getAssets());
 
 		// add asset
-		$css->addAsset("one.css");
+		$css->add("one.css");
 		$this->assertEquals(array(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css"), $css->getAssets());
 		// adding more than 1 asset
-		$css->addAsset(array("two.less", "three.css"));
+		$css->add(array("two.less", "three.css"));
 		$this->assertEquals(
 			array(
 				__DIR__."/assets".DIRECTORY_SEPARATOR."one.css",
@@ -74,7 +74,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 
 		// add asset
-		$css->addAsset("assets/one.css");
+		$css->add("assets/one.css");
 		$this->assertEquals(array(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css"), $css->getAssets());
 	}
 
@@ -84,7 +84,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 
 		// add asset
-		$css->addAsset(__DIR__.DIRECTORY_SEPARATOR."assets".DIRECTORY_SEPARATOR."one.css");
+		$css->add(__DIR__.DIRECTORY_SEPARATOR."assets".DIRECTORY_SEPARATOR."one.css");
 		$this->assertEquals(array(__DIR__.DIRECTORY_SEPARATOR."assets".DIRECTORY_SEPARATOR."one.css"), $css->getAssets());
 	}
 
@@ -100,10 +100,10 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css->setDebug(true);
 		$this->assertFalse($fn1 == $fn2 = $css->getFileName());
 		// add a file
-		$css->addAsset("one.css");
+		$css->add("one.css");
 		$this->assertFalse($fn2 == $fn1 = $css->getFileName());
 		// add another file
-		$css->addAsset("two.less");
+		$css->add("two.less");
 		$this->assertFalse($fn1 == $fn2 = $css->getFileName());
 	}
 
@@ -115,7 +115,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// $config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__);
 		// // first Packer
 		// $css = new CssPacker($config);
-		// $css->addAsset("one.css");
+		// $css->add("one.css");
 		// $fn1 = $css->getFileName();
 		
 		// // change last modified time
@@ -123,7 +123,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 
 		// // new Packer
 		// $css = new CssPacker($config);
-		// $css->addAsset("one.css");
+		// $css->add("one.css");
 
 		// // different names
 		// $this->assertFalse($fn1 == $css->getFileName());
@@ -134,7 +134,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// debug is TRUE, so no minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => true);
 		$css = new CssPacker($config);
-		$css->addAsset("one.css");
+		$css->add("one.css");
 
 		$this->assertEquals(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css"), $css->pack(false));
 	}
@@ -144,7 +144,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// debug is FALSE, so minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => false);
 		$css = new CssPacker($config);
-		$css->addAsset("one.css");
+		$css->add("one.css");
 		// minificated
 		$this->assertEquals("body{color:#ccc}", $css->pack(false));
 	}
@@ -154,7 +154,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// debug is FALSE, so minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => false);
 		$css = new CssPacker($config);
-		$css->addAsset("two.less");
+		$css->add("two.less");
 		// minificated
 		$this->assertEquals("body{background:#333}", $css->pack(false));
 	}
@@ -164,7 +164,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// debug is FALSE, so minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => false);
 		$css = new CssPacker($config);
-		$css->addAsset(array("one.css", "two.less"));
+		$css->add(array("one.css", "two.less"));
 		// minificated
 		$this->assertEquals(file_get_contents(__DIR__."/assets/three.css"), $css->pack(false));
 	}
@@ -174,7 +174,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// debug is FALSE, so minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/assets", "debug" => false);
 		$css = new CssPacker($config);
-		$css->addAsset(array("one.css", "two.less"));
+		$css->add(array("one.css", "two.less"));
 		// returns the name of the file
 		$this->assertEquals($filename = $css->getFileName(), $css->pack(true));
 
