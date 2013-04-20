@@ -10,7 +10,7 @@ CssPacker
 Packs and minifies CSS stylesheet files. It can process LESS files as 
 well.
 
-```
+```php
 $config = array(
 	"input_path"  => "/path/to/your/assets", 
 	"output_path" => "/path/to/webroot/css",
@@ -24,18 +24,19 @@ $css->add("pages/index.css");
 // add a file not from the default input path:
 $css->add("/absolute/path/to/stylesheet.css");
 
-// pack, minify, save a file and get the filename:
-// minifications will only be done if "debug" configuration option is
-// FALSE. This makes debugging easier.
-$filename = $css->pack();
-
 // In your template file:
-<link rel="stylesheet" href="/css/<?php echo $filename; ?>" />
+<link rel="stylesheet" href="/css/<?php echo $css->pack(); ?>" />
+
+// This will pack all assets in one and minify* them. Then the result
+// will be saved in a file. Return a filename.
+// *Minification will only be done if "debug" configuration option is
+// FALSE. This makes debugging easier.
 
 // If you want to get the contents only and not saving it in a file:
 <style type="text/css">
 <?php echo $css->pack(false); ?> 
 </style>
+
 ```
 
 JsPacker
