@@ -136,7 +136,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		$js = new JsPacker($config);
 		$js->add("one.js");
 
-		$this->assertEquals(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR."one.js"), $js->pack(false));
+		$this->assertEquals(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR."one.js"), $js->dump());
 	}
 
 	public function testPackWithoutSavingAndMinification()
@@ -146,7 +146,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		$js = new JsPacker($config);
 		$js->add("one.js");
 		// minificated
-		$this->assertEquals("function test()\n{alert(\"this is a test\");}", $js->pack(false));
+		$this->assertEquals("function test()\n{alert(\"this is a test\");}", $js->dump());
 	}
 
 	public function testLessMinificationAndMerging()
@@ -156,7 +156,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		$js = new JsPacker($config);
 		$js->add(array("one.js", "two.js"));
 		// minificated
-		$this->assertEquals(file_get_contents(__DIR__."/assets/three.js"), $js->pack(false));
+		$this->assertEquals(file_get_contents(__DIR__."/assets/three.js"), $js->dump());
 	}
 
 	public function testFinal()
@@ -166,7 +166,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		$js = new JsPacker($config);
 		$js->add(array("one.js", "two.js"));
 		// returns the name of the file
-		$this->assertEquals($filename = $js->getFileName(), $js->pack(true));
+		$this->assertEquals($filename = $js->getFileName(), $js->pack());
 
 		$this->assertSame(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR.$filename), file_get_contents(__DIR__."/assets/three.js"));
 		unlink(__DIR__."/assets".DIRECTORY_SEPARATOR.$filename);

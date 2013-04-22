@@ -99,6 +99,45 @@ abstract class AbstractPacker
 	}
 
 	/**
+	 * Add asset(s) file(s)
+	 * 
+	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 */
+	public function add($assets)
+	{
+		$assets = (array) $assets;
+
+		// Check one by one and throw an exception if the file is not found
+		foreach ($assets as $asset) { 
+			// prepend search path?
+			if (!$this->isAbsolutePath($asset)) {
+				$asset = $this->config["input_path"] . $asset;
+			}
+				
+			// Check the file and gets last modified date
+			if (!$mtime = @filemtime($asset)) {
+				throw new \Exception("Could not stat $asset");
+			}
+			
+			// make some custom stuff
+			$this->addAsset($asset);
+
+			// add it in the list
+			$this->assets[] = $asset;
+
+			// last modified time
+			$this->lastModified = max($mtime, $this->lastModified);
+		}
+	}
+
+	/**
+	 * Adds asset(s)
+	 * 
+	 * @param string $assets The file can be absolute path or relative to the input_path
+	 */
+	abstract protected function addAsset($asset);
+
+	/**
 	 * Returns list of all added assets.
 	 * 
 	 * @return array
@@ -107,45 +146,30 @@ abstract class AbstractPacker
 	{
 		return $this->assets;
 	}
-
-	public function pack($save = true)
+	
+	public function dump()
 	{
 		$filename = $this->getFileName();
 		$path = $this->config["output_path"].$filename;
 
-		if ($save) {
-			if (!file_exists($path)) {
-				file_put_contents($path, $this->dumpAssets());
-			}
-
-			return $filename;
-		}
-
 		return file_exists($path) ? file_get_contents($path) : $this->dumpAssets();
 	}
 
-	/**
-	 * Adds asset(s)
-	 * 
-	 * @param string $assets The file can be absolute path or relative to the input_path
-	 */
-	protected function addAsset($asset)
+	abstract protected function dumpAssets();
+
+	public function pack()
 	{
-		// prepend search path?
-		if (!$this->isAbsolutePath($asset)) {
-			$asset = $this->config["input_path"] . $asset;
-		}
-			
-		// Check the file and gets last modified date
-		if ($mtime = @filemtime($asset)) {
-			$this->assets[] = $asset;
-		} else {
-			throw new \Exception("Could not stat $asset");
+		$filename = $this->getFileName();
+		$path = $this->config["output_path"].$filename;
+
+		if (!file_exists($path)) {
+			file_put_contents($path, $this->dumpAssets());
 		}
 
-		// last modified time
-		$this->lastModified = max($mtime, $this->lastModified);
+		return $filename;
 	}
+
+	abstract public function getFileName();
 
 	/**
 	 * Check if the file is given with absolute path.
@@ -168,5 +192,4 @@ abstract class AbstractPacker
 		return false;
 	}
 
-	abstract protected function dumpAssets();
 }

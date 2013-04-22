@@ -24,27 +24,15 @@ class JsPacker extends AbstractPacker
 	}
 
 	/**
-	 * Adds JS file(s)
-	 * 
-	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 * @inheritdoc
 	 */
-	public function add($assets)
+	protected function addAsset($assets)
 	{
-		$assets = (array) $assets;
-
-		// Check one by one and throw an exception if the file is not found
-		foreach ($assets as $asset) {
-			$this->addAsset($asset);
-		}
 	}
 
-	public function getFileName()
-	{
-		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
-
-		return "_".substr(sha1($str), 0, 11).".js";
-	}
-
+	/**
+	 * @inheritdoc
+	 */
 	protected function dumpAssets()
 	{
 		$factory = $this->getAsseticFactory();
@@ -58,6 +46,13 @@ class JsPacker extends AbstractPacker
 		}
 
 		return $buffer;
+	}
+
+	public function getFileName()
+	{
+		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
+
+		return "_".substr(sha1($str), 0, 11).".js";
 	}
 
 	protected function getAsseticFactory()

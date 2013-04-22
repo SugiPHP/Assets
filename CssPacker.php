@@ -28,32 +28,19 @@ class CssPacker extends AbstractPacker
 	}
 
 	/**
-	 * Adds css file(s)
-	 * 
-	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 * @inheritdoc
 	 */
-	public function add($assets)
+	protected function addAsset($asset)
 	{
-		$assets = (array) $assets;
-
-		// Check one by one and throw an exception if the file is not found
-		foreach ($assets as $asset) {
-			// if it is a less file than we'll need LessPHP filter
-			if (strpos($asset, ".less") !== false) {
-				$this->config["less_filter"] = true;
-			}
-
-			$this->addAsset($asset);
+		// if it is a less file than we'll need LessPHP filter
+		if (strpos($asset, ".less") !== false) {
+			$this->config["less_filter"] = true;
 		}
 	}
 
-	public function getFileName()
-	{
-		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
-
-		return "_".substr(sha1($str), 0, 11).".css";
-	}
-
+	/**
+	 * @inheritdoc
+	 */
 	protected function dumpAssets()
 	{
 		$factory = $this->getAsseticFactory();
@@ -70,6 +57,13 @@ class CssPacker extends AbstractPacker
 		}
 
 		return $buffer;
+	}
+
+	public function getFileName()
+	{
+		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
+
+		return "_".substr(sha1($str), 0, 11).".css";
 	}
 
 	protected function getAsseticFactory()

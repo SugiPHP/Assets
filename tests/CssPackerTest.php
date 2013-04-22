@@ -129,24 +129,24 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// $this->assertFalse($fn1 == $css->getFileName());
 	}
 
-	public function testPackWithoutSavingDebug()
+	public function testDump()
 	{
 		// debug is TRUE, so no minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => true);
 		$css = new CssPacker($config);
 		$css->add("one.css");
 
-		$this->assertEquals(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css"), $css->pack(false));
+		$this->assertEquals(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css"), $css->dump());
 	}
 
-	public function testPackWithoutSavingAndMinification()
+	public function testDumpWithoutMinification()
 	{
 		// debug is FALSE, so minifications are done
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__, "debug" => false);
 		$css = new CssPacker($config);
 		$css->add("one.css");
 		// minificated
-		$this->assertEquals("body{color:#ccc}", $css->pack(false));
+		$this->assertEquals("body{color:#ccc}", $css->dump());
 	}
 
 	public function testLessFilter()
@@ -156,7 +156,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 		$css->add("two.less");
 		// minificated
-		$this->assertEquals("body{background:#333}", $css->pack(false));
+		$this->assertEquals("body{background:#333}", $css->dump());
 	}
 
 	public function testLessMinificationAndMerging()
@@ -166,7 +166,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 		$css->add(array("one.css", "two.less"));
 		// minificated
-		$this->assertEquals(file_get_contents(__DIR__."/assets/three.css"), $css->pack(false));
+		$this->assertEquals(file_get_contents(__DIR__."/assets/three.css"), $css->dump());
 	}
 
 	public function testFinal()
@@ -176,7 +176,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 		$css->add(array("one.css", "two.less"));
 		// returns the name of the file
-		$this->assertEquals($filename = $css->getFileName(), $css->pack(true));
+		$this->assertEquals($filename = $css->getFileName(), $css->pack());
 
 		$this->assertSame(file_get_contents(__DIR__."/assets".DIRECTORY_SEPARATOR.$filename), file_get_contents(__DIR__."/assets/three.css"));
 		unlink(__DIR__."/assets".DIRECTORY_SEPARATOR.$filename);
