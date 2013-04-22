@@ -32,6 +32,15 @@ abstract class AbstractPacker
 	protected $lastModified = 0;
 
 	/**
+	 * File Name Template. Asterix (*) will be replaced with
+	 * unique name based on all assets added, configuration settings
+	 * and last modification time.
+	 *
+	 * @var string
+	 */
+	protected $filenameTemplate = "*";
+
+	/**
 	 * Asset Packer Constructor
 	 * 
 	 * @param array $config
@@ -45,6 +54,9 @@ abstract class AbstractPacker
 	{
 		$this->setInputPath($config["input_path"]);
 		$this->setOutputPath($config["output_path"]);
+		if (isset($config["file_name"])) {
+			$this->setFilename($config["file_name"]);
+		}
 		$this->setDebug(isset($config["debug"]) ? $config["debug"] : false);
 	}
 
@@ -88,11 +100,49 @@ abstract class AbstractPacker
 		$this->config["output_path"] = rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
 	}
 
+	/**
+	 * Sets output filename template.
+	 * 
+	 * @param string $filenameTemplate
+	 */
+	public function setFilename($filenameTemplate)
+	{
+		$this->filenameTemplate = $filenameTemplate;
+	}
+
+	/**
+	 * Returns unique output file name (if * exists in the filename template).
+	 *
+	 * @return string
+	 */
+	public function getFileName()
+	{
+		if (strpos($this->filenameTemplate, "*") === false) {
+			return $this->filenameTemplate;
+		}
+
+		$serial = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
+		$filename = substr(sha1($serial), 0, 11);
+
+		return str_replace("*", $filename, $this->filenameTemplate);
+	}
+
+	/**
+	 * Returns debug configuration option.
+	 *
+	 * @return bool
+	 */
 	public function getDebug()
 	{
 		return $this->config["debug"];
 	}
 
+	/**
+	 * Sets debug configuration option. If this is set some minifications
+	 * will not be done to ease debugging in development environment.
+	 * 
+	 * @param boolean $debug
+	 */
 	public function setDebug($debug)
 	{
 		$this->config["debug"] = $debug;
@@ -147,6 +197,11 @@ abstract class AbstractPacker
 		return $this->assets;
 	}
 	
+	/**
+	 * Dumps all assets files as one packed and minified version.
+	 *
+	 * @return string
+	 */
 	public function dump()
 	{
 		$filename = $this->getFileName();
@@ -157,6 +212,12 @@ abstract class AbstractPacker
 
 	abstract protected function dumpAssets();
 
+	/**
+	 * Saves packed and minified assets in a file with unique name.
+	 * Returns the filename without the path.
+	 *
+	 * @return string Unique filename of the saved file
+	 */
 	public function pack()
 	{
 		$filename = $this->getFileName();
@@ -168,8 +229,6 @@ abstract class AbstractPacker
 
 		return $filename;
 	}
-
-	abstract public function getFileName();
 
 	/**
 	 * Check if the file is given with absolute path.

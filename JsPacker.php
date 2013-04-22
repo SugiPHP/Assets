@@ -20,6 +20,9 @@ class JsPacker extends AbstractPacker
 	 */
 	public function __construct(array $config)
 	{
+		// default FileNameTemplate
+		$this->setFilename("_*.js");
+
 		parent::__construct($config);
 	}
 
@@ -46,13 +49,6 @@ class JsPacker extends AbstractPacker
 		}
 
 		return $buffer;
-	}
-
-	public function getFileName()
-	{
-		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
-
-		return "_".substr(sha1($str), 0, 11).".js";
 	}
 
 	protected function getAsseticFactory()

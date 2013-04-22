@@ -22,6 +22,9 @@ class CssPacker extends AbstractPacker
 	 */
 	public function __construct(array $config)
 	{
+		// default FileNameTemplate
+		$this->setFilename("_*.css");
+		// AbstractPacker constructor
 		parent::__construct($config);
 		// Used to determine if we need to load LessPHP filter
 		$this->config["less_filter"] = false;
@@ -57,13 +60,6 @@ class CssPacker extends AbstractPacker
 		}
 
 		return $buffer;
-	}
-
-	public function getFileName()
-	{
-		$str = serialize($this->config) . serialize($this->assets) . serialize($this->lastModified);
-
-		return "_".substr(sha1($str), 0, 11).".css";
 	}
 
 	protected function getAsseticFactory()
