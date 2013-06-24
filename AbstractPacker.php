@@ -216,6 +216,9 @@ abstract class AbstractPacker
 				}
 				
 			}
+			else{
+				$this->_addSingleAsset($asset);
+			}
 			
 		}
 	}
