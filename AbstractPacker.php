@@ -71,13 +71,47 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Sets default input path.
+	 * Sets default input path or an array with paths.
 	 *
 	 * @param string $path
 	 */
 	public function setInputPath($path)
 	{
-		$this->config["input_path"] = rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
+		if(is_array($path)){
+			$this->config["input_path"] = array_map(array($this,'_preparePath'), $path);
+		}
+		else
+			$this->config["input_path"] = (array)$this->_preparePath($path);
+		
+		
+	}
+	
+	/**
+	 * Prepares an input path
+	 * @param string $path A path to an input directory
+	 * @return string The prepared path
+	 */
+	private function _preparePath($path){
+		return rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
+	}
+	
+	/**
+	 * Appends a path to the beggining of the array
+	 * @param mixed $path String with the path or array with paths
+	 */
+	public function pushInputPath($path){
+		$this->config["input_path"] = array_merge((array)$path,(array)$this->config["input_path"]);
+	}
+	
+	/**
+	 * Gets the first path of the array and removes it from the paths
+	 * @return string The popped path
+	 */
+	public function popInputPath(){
+		$input_path = (array)$this->config["input_path"];
+		$poped_path = array_shift($input_path);
+		$this->config["input_path"] = $input_path;
+		return $poped_path;
 	}
 
 	/**
@@ -161,23 +195,49 @@ abstract class AbstractPacker
 		foreach ($assets as $asset) { 
 			// prepend search path?
 			if (!$this->isAbsolutePath($asset)) {
-				$asset = $this->config["input_path"] . $asset;
-			}
+				//Stack of paths
+				if(is_array($this->config["input_path"])){
+					$assetFound = FALSE;
+					foreach ($this->config["input_path"] as $input_path){
+						$fileName = $input_path . $asset;
+						if(file_exists($fileName)){
+							$this->_addSingleAsset($fileName);
+							$assetFound = TRUE;
+							break;
+						}
+					}
+					//Throws an exception if an asset is not found
+					if(!$assetFound)
+						throw new \Exception("Could not find $asset");
+				}
+				//single path
+				else{
+					$this->_addSingleAsset($this->config["input_path"] . $asset);
+				}
 				
-			// Check the file and gets last modified date
-			if (!$mtime = @filemtime($asset)) {
-				throw new \Exception("Could not stat $asset");
+			}
+			else{
+				$this->_addSingleAsset($asset);
 			}
 			
-			// make some custom stuff
-			$this->addAsset($asset);
-
-			// add it in the list
-			$this->assets[] = $asset;
-
-			// last modified time
-			$this->lastModified = max($mtime, $this->lastModified);
 		}
+	}
+	
+	private function _addSingleAsset($asset){
+			
+		// Check the file and gets last modified date
+		if (!$mtime = @filemtime($asset)) {
+			throw new \Exception("Could not stat $asset");
+		}
+
+		// make some custom stuff
+		$this->addAsset($asset);
+
+		// add it in the list
+		$this->assets[] = $asset;
+
+		// last modified time
+		$this->lastModified = max($mtime, $this->lastModified);
 	}
 
 	/**

@@ -53,7 +53,9 @@ class JsPacker extends AbstractPacker
 
 	protected function getAsseticFactory()
 	{
-		$factory = new AssetFactory($this->config["input_path"], $this->config["debug"]);
+		if(empty($this->config["input_path"][0]))
+			throw new \Exception ('Empty input path');
+		$factory = new AssetFactory($this->config["input_path"][0], $this->config["debug"]);
 		$factory->setDefaultOutput("");
 
 		// add a FilterManager to the AssetFactory
