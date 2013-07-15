@@ -16,6 +16,11 @@ use Assetic\Filter\CssMinFilter;
 class CssPacker extends AbstractPacker
 {
 	/**
+	 * Presets
+	 */
+	private $lessPresets = array();
+	
+	/**
 	 * CSSpacker constructor
 	 * 
 	 * @param array $config
@@ -74,10 +79,22 @@ class CssPacker extends AbstractPacker
 		$factory->setFilterManager($fm);
 		// adding some filters to the filter manager
 		if ($this->config["less_filter"]) {
-			$fm->set("less", new LessphpFilter());
+			$lessphpFilter = new LessphpFilter();
+			if($this->lessPresets)
+				$lessphpFilter->setPresets($this->lessPresets);
+			$fm->set("less", $lessphpFilter);
 		}
 		$fm->set("min", new CssMinFilter());
 
 		return $factory;
+	}
+	
+	/**
+	 * Set an array with presets
+	 * @param array $presets
+	 */
+	public function setPresets($presets)
+	{
+		$this->lessPresets = (array)$presets;
 	}
 }
