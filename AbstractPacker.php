@@ -77,40 +77,34 @@ abstract class AbstractPacker
 	 */
 	public function setInputPath($path)
 	{
-		if(is_array($path)){
-			$this->config["input_path"] = array_map(array($this,'_preparePath'), $path);
+		if (is_array($path)) {
+			$this->config["input_path"] = array_map(array($this, "preparePath"), $path);
+		} else {
+			$this->config["input_path"] = (array) $this->preparePath($path);
 		}
-		else
-			$this->config["input_path"] = (array)$this->_preparePath($path);
-		
-		
 	}
 	
 	/**
-	 * Prepares an input path
-	 * @param string $path A path to an input directory
-	 * @return string The prepared path
-	 */
-	private function _preparePath($path){
-		return rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
-	}
-	
-	/**
-	 * Appends a path to the beggining of the array
+	 * Appends a path to the beggining of the array.
+	 * 
 	 * @param mixed $path String with the path or array with paths
 	 */
-	public function pushInputPath($path){
-		$this->config["input_path"] = array_merge((array)$path,(array)$this->config["input_path"]);
+	public function pushInputPath($path)
+	{
+		$this->config["input_path"] = array_merge((array)$path, (array)$this->config["input_path"]);
 	}
 	
 	/**
-	 * Gets the first path of the array and removes it from the paths
+	 * Gets the first path of the array and removes it from the paths.
+	 * 
 	 * @return string The popped path
 	 */
-	public function popInputPath(){
+	public function popInputPath()
+	{
 		$input_path = (array)$this->config["input_path"];
 		$poped_path = array_shift($input_path);
 		$this->config["input_path"] = $input_path;
+	
 		return $poped_path;
 	}
 
@@ -142,6 +136,16 @@ abstract class AbstractPacker
 	public function setFilename($filenameTemplate)
 	{
 		$this->filenameTemplate = $filenameTemplate;
+	}
+
+	/**
+	 * Returns filename template.
+	 * 
+	 * @return string
+	 */
+	public function getFilenameTemplate()
+	{
+		return $this->filenameTemplate;
 	}
 
 	/**
@@ -195,36 +199,32 @@ abstract class AbstractPacker
 		foreach ($assets as $asset) { 
 			// prepend search path?
 			if (!$this->isAbsolutePath($asset)) {
-				//Stack of paths
-				if(is_array($this->config["input_path"])){
+				// Stack of paths
+				if (is_array($this->config["input_path"])) {
 					$assetFound = FALSE;
 					foreach ($this->config["input_path"] as $input_path){
 						$fileName = $input_path . $asset;
 						if(file_exists($fileName)){
-							$this->_addSingleAsset($fileName);
+							$this->addSingleAsset($fileName);
 							$assetFound = TRUE;
 							break;
 						}
 					}
-					//Throws an exception if an asset is not found
-					if(!$assetFound)
+					// Throws an exception if an asset is not found
+					if ( ! $assetFound) {
 						throw new \Exception("Could not find $asset");
+					}
+				} else { //single path
+					$this->addSingleAsset($this->config["input_path"] . $asset);
 				}
-				//single path
-				else{
-					$this->_addSingleAsset($this->config["input_path"] . $asset);
-				}
-				
+			} else {
+				$this->addSingleAsset($asset);
 			}
-			else{
-				$this->_addSingleAsset($asset);
-			}
-			
 		}
 	}
 	
-	private function _addSingleAsset($asset){
-			
+	protected function addSingleAsset($asset)
+	{
 		// Check the file and gets last modified date
 		if (!$mtime = @filemtime($asset)) {
 			throw new \Exception("Could not stat $asset");
@@ -288,6 +288,17 @@ abstract class AbstractPacker
 		}
 
 		return $filename;
+	}
+	
+	/**
+	 * Prepares an input path.
+	 * 
+	 * @param  string $path A path to an input directory
+	 * @return string The prepared path
+	 */
+	protected function preparePath($path)
+	{
+		return rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
 	}
 
 	/**
