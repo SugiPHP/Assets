@@ -15,7 +15,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output");
 		$css = new CssPacker($config);
-		$this->assertSame(__DIR__."/assets".DIRECTORY_SEPARATOR, $css->getInputPath());
+		$this->assertSame(array(__DIR__."/assets".DIRECTORY_SEPARATOR), $css->getInputPath());
 		$this->assertSame(__DIR__."/output".DIRECTORY_SEPARATOR, $css->getOutputPath());
 		// checks the default value of debug is FALSE
 		$this->assertFalse($css->getDebug());
@@ -31,9 +31,9 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$css = new CssPacker($config);
 		// input path
 		$css->setInputPath(__DIR__."1");
-		$this->assertSame(__DIR__."1".DIRECTORY_SEPARATOR, $css->getInputPath());
+		$this->assertSame(array(__DIR__."1".DIRECTORY_SEPARATOR), $css->getInputPath());
 		$css->setInputPath(__DIR__."2".DIRECTORY_SEPARATOR);
-		$this->assertSame(__DIR__."2".DIRECTORY_SEPARATOR, $css->getInputPath());
+		$this->assertSame(array(__DIR__."2".DIRECTORY_SEPARATOR), $css->getInputPath());
 		// output path
 		$css->setOutputPath(__DIR__."3");
 		$this->assertSame(__DIR__."3".DIRECTORY_SEPARATOR, $css->getOutputPath());

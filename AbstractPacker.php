@@ -111,7 +111,7 @@ abstract class AbstractPacker
 	/**
 	 * Returns default output path.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getOutputPath()
 	{
