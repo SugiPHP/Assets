@@ -12,14 +12,14 @@ abstract class AbstractPacker
 {
 	/**
 	 * Configuration settings.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $config = array();
 
 	/**
 	 * List of loaded assets.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $assets = array();
@@ -42,10 +42,10 @@ abstract class AbstractPacker
 
 	/**
 	 * Asset Packer Constructor
-	 * 
+	 *
 	 * @param array $config
-	 *  - output_path - the directory where cached files will be created. 
-	 *      This should be within your DOCUMENT ROOT and be visible from web. 
+	 *  - output_path - the directory where cached files will be created.
+	 *      This should be within your DOCUMENT ROOT and be visible from web.
 	 *  	The server must have write permissions for this path.
 	 *  - input_path - the directory where actual uncompressed files are. This can be anywhere in the server.
 	 *  - debug - minifications are not done when debug is TRUE; default is FALSE;
@@ -83,20 +83,20 @@ abstract class AbstractPacker
 			$this->config["input_path"] = (array) $this->preparePath($path);
 		}
 	}
-	
+
 	/**
 	 * Appends a path to the beggining of the array.
-	 * 
+	 *
 	 * @param mixed $path String with the path or array with paths
 	 */
 	public function pushInputPath($path)
 	{
 		$this->config["input_path"] = array_merge((array)$path, (array)$this->config["input_path"]);
 	}
-	
+
 	/**
 	 * Gets the first path of the array and removes it from the paths.
-	 * 
+	 *
 	 * @return string The popped path
 	 */
 	public function popInputPath()
@@ -104,7 +104,7 @@ abstract class AbstractPacker
 		$input_path = (array)$this->config["input_path"];
 		$poped_path = array_shift($input_path);
 		$this->config["input_path"] = $input_path;
-	
+
 		return $poped_path;
 	}
 
@@ -130,7 +130,7 @@ abstract class AbstractPacker
 
 	/**
 	 * Sets output filename template.
-	 * 
+	 *
 	 * @param string $filenameTemplate
 	 */
 	public function setFilename($filenameTemplate)
@@ -140,7 +140,7 @@ abstract class AbstractPacker
 
 	/**
 	 * Returns filename template.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getFilenameTemplate()
@@ -178,7 +178,7 @@ abstract class AbstractPacker
 	/**
 	 * Sets debug configuration option. If this is set some minifications
 	 * will not be done to ease debugging in development environment.
-	 * 
+	 *
 	 * @param boolean $debug
 	 */
 	public function setDebug($debug)
@@ -188,25 +188,38 @@ abstract class AbstractPacker
 
 	/**
 	 * Add asset(s) file(s)
-	 * 
+	 *
 	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
 	 */
 	public function add($assets)
 	{
-		$assets = (array) $assets;
+		$this->addAssetsArray((array) $assets, false);
+	}
 
+	/**
+	 * Add asset(s) file(s) only if they were not added to the list.
+	 *
+	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 */
+	public function addOnce($assets)
+	{
+		$this->addAssetsArray((array) $assets, true);
+	}
+
+	protected function addAssetsArray(array $assets, $addOnce)
+	{
 		// Check one by one and throw an exception if the file is not found
-		foreach ($assets as $asset) { 
+		foreach ($assets as $asset) {
 			// prepend search path?
 			if (!$this->isAbsolutePath($asset)) {
 				// Stack of paths
 				if (is_array($this->config["input_path"])) {
-					$assetFound = FALSE;
+					$assetFound = false;
 					foreach ($this->config["input_path"] as $input_path){
 						$fileName = $input_path . $asset;
-						if(file_exists($fileName)){
-							$this->addSingleAsset($fileName);
-							$assetFound = TRUE;
+						if (file_exists($fileName)) {
+							$this->addSingleAsset($fileName, $addOnce);
+							$assetFound = true;
 							break;
 						}
 					}
@@ -215,19 +228,23 @@ abstract class AbstractPacker
 						throw new \Exception("Could not find $asset");
 					}
 				} else { //single path
-					$this->addSingleAsset($this->config["input_path"] . $asset);
+					$this->addSingleAsset($this->config["input_path"] . $asset, $addOnce);
 				}
 			} else {
-				$this->addSingleAsset($asset);
+				$this->addSingleAsset($asset, $addOnce);
 			}
 		}
 	}
-	
-	protected function addSingleAsset($asset)
+
+	protected function addSingleAsset($asset, $addOnce)
 	{
 		// Check the file and gets last modified date
 		if (!$mtime = @filemtime($asset)) {
 			throw new \Exception("Could not stat $asset");
+		}
+
+		if ($addOnce and in_array($asset, $this->assets)) {
+			return;
 		}
 
 		// make some custom stuff
@@ -242,21 +259,21 @@ abstract class AbstractPacker
 
 	/**
 	 * Adds asset(s)
-	 * 
+	 *
 	 * @param string $assets The file can be absolute path or relative to the input_path
 	 */
 	abstract protected function addAsset($asset);
 
 	/**
 	 * Returns list of all added assets.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getAssets()
 	{
 		return $this->assets;
 	}
-	
+
 	/**
 	 * Dumps all assets files as one packed and minified version.
 	 *
@@ -289,10 +306,10 @@ abstract class AbstractPacker
 
 		return $filename;
 	}
-	
+
 	/**
 	 * Prepares an input path.
-	 * 
+	 *
 	 * @param  string $path A path to an input directory
 	 * @return string The prepared path
 	 */
@@ -303,7 +320,7 @@ abstract class AbstractPacker
 
 	/**
 	 * Check if the file is given with absolute path.
-	 * 
+	 *
 	 * @param  string $path
 	 * @return bool
 	 */
