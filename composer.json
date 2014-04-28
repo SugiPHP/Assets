@@ -23,10 +23,9 @@
         "leafo/lessphp": "Enables ability to work with less files"
     },
     "autoload": {
-        "psr-0": { 
+        "psr-4": {
             "SugiPHP\\Assets\\": ""
         }
     },
-    "target-dir": "SugiPHP/Assets",
     "minimum-stability": "dev"
 }
