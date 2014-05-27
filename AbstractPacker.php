@@ -85,27 +85,39 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Appends a path to the beggining of the array.
+	 * Adds a path on the end of the array
 	 *
-	 * @param mixed $path String with the path or array with paths
+	 * @param string $path Input search path
 	 */
-	public function pushInputPath($path)
+	public function addInputPath($path)
 	{
-		$this->config["input_path"] = array_merge((array)$path, (array)$this->config["input_path"]);
+		$this->config["input_path"][] = $path;
+	}
+
+	/**
+	 * Removes last search input path.
+	 */
+	public function popInputPath()
+	{
+		array_pop((array) $this->config["input_path"]);
+	}
+
+	/**
+	 * Appends a path to the beginning of the array.
+	 *
+	 * @param string $path Input search path
+	 */
+	public function prependInputPath($path)
+	{
+		array_unshift((array) $this->config["input_path"], $path);
 	}
 
 	/**
 	 * Gets the first path of the array and removes it from the paths.
-	 *
-	 * @return string The popped path
 	 */
-	public function popInputPath()
+	public function shiftInputPath()
 	{
-		$input_path = (array)$this->config["input_path"];
-		$poped_path = array_shift($input_path);
-		$this->config["input_path"] = $input_path;
-
-		return $poped_path;
+		array_shift((array) $this->config["input_path"]);
 	}
 
 	/**
