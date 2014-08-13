@@ -67,7 +67,9 @@ class CssPackerTest extends PHPUnit_Framework_TestCase
 				__DIR__."/assets".DIRECTORY_SEPARATOR."one.css",
 				__DIR__."/assets".DIRECTORY_SEPARATOR."two.less",
 				__DIR__."/assets".DIRECTORY_SEPARATOR."three.css",
-			), $css->getAssets());
+			),
+			$css->getAssets()
+		);
 	}
 
 	public function testAddingAssetWithPath()

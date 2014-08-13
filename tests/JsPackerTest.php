@@ -67,7 +67,9 @@ class JsPackerTest extends PHPUnit_Framework_TestCase
 				__DIR__."/assets".DIRECTORY_SEPARATOR."one.js",
 				__DIR__."/assets".DIRECTORY_SEPARATOR."two.js",
 				__DIR__."/assets".DIRECTORY_SEPARATOR."three.js",
-			), $js->getAssets());
+			),
+			$js->getAssets()
+		);
 	}
 
 	public function testAddingAssetWithPath()

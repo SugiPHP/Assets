@@ -1,18 +1,21 @@
 SugiPHP Asset Manager
 =====================
 
-SugiPHP\Assets simplifies use of a well know asset management 
+[![Build Status](https://scrutinizer-ci.com/g/SugiPHP/Assets/badges/build.png?b=master)](https://scrutinizer-ci.com/g/SugiPHP/Assets/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/SugiPHP/Assets/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/SugiPHP/Assets/?branch=master)
+
+SugiPHP\Assets simplifies use of a well know asset management
 framework for PHP [Assetic](https://github.com/kriswallsmith/assetic).
 
 CssPacker
 ---------
 
-Packs and minifies CSS stylesheet files. It can process LESS files as 
+Packs and minifies CSS stylesheet files. It can process LESS files as
 well.
 
 ```php
 $config = array(
-	"input_path"  => "/path/to/your/assets", 
+	"input_path"  => "/path/to/your/assets",
 	"output_path" => "/path/to/webroot/css",
 	"debug"       => true
 );
@@ -34,7 +37,7 @@ $css->add("/absolute/path/to/stylesheet.css");
 
 // If you want to get the contents only and not saving it in a file:
 <style type="text/css">
-<?php echo $css->pack(false); ?> 
+<?php echo $css->pack(false); ?>
 </style>
 
 ```
