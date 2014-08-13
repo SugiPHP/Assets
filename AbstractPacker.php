@@ -220,6 +220,10 @@ abstract class AbstractPacker
 		$this->addAssetsArray((array) $assets, true);
 	}
 
+	/**
+	 * @param array  $assets
+	 * @param boolean $addOnce
+	 */
 	protected function addAssetsArray(array $assets, $addOnce)
 	{
 		// Check one by one and throw an exception if the file is not found
@@ -272,9 +276,9 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Adds asset(s)
+	 * Adds asset
 	 *
-	 * @param string $assets The file can be absolute path or relative to the input_path
+	 * @param string $asset The file can be absolute path or relative to the input_path
 	 */
 	abstract protected function addAsset($asset);
 
