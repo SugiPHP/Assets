@@ -11,6 +11,16 @@ namespace SugiPHP\Assets;
 abstract class AbstractPacker
 {
 	/**
+	 * Adds asset
+	 *
+	 * @param string $asset The file can be absolute path or relative to the input_path
+	 */
+	abstract protected function addAsset($asset);
+
+	abstract protected function dumpAssets();
+
+
+	/**
 	 * Configuration settings.
 	 *
 	 * @var array
@@ -61,9 +71,9 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Returns default input path.
+	 * Returns input path(s).
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getInputPath()
 	{
@@ -73,7 +83,7 @@ abstract class AbstractPacker
 	/**
 	 * Sets default input path or an array with paths.
 	 *
-	 * @param string $path
+	 * @param string|array $path
 	 */
 	public function setInputPath($path)
 	{
@@ -85,13 +95,13 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Adds a path on the end of the array
+	 * Adds a path on the end of the input path array
 	 *
 	 * @param string $path Input search path
 	 */
 	public function addInputPath($path)
 	{
-		$this->config["input_path"][] = $path;
+		$this->config["input_path"][] = $this->preparePath($path);
 	}
 
 	/**
@@ -99,25 +109,25 @@ abstract class AbstractPacker
 	 */
 	public function popInputPath()
 	{
-		array_pop((array) $this->config["input_path"]);
+		array_pop($this->config["input_path"]);
 	}
 
 	/**
-	 * Appends a path to the beginning of the array.
+	 * Appends a path to the beginning of the input path array.
 	 *
 	 * @param string $path Input search path
 	 */
 	public function prependInputPath($path)
 	{
-		array_unshift((array) $this->config["input_path"], $path);
+		array_unshift($this->config["input_path"], $this->preparePath($path));
 	}
 
 	/**
-	 * Gets the first path of the array and removes it from the paths.
+	 * Gets the first path of the array and removes it from the input paths.
 	 */
 	public function shiftInputPath()
 	{
-		array_shift((array) $this->config["input_path"]);
+		array_shift($this->config["input_path"]);
 	}
 
 	/**
@@ -137,7 +147,7 @@ abstract class AbstractPacker
 	 */
 	public function setOutputPath($path)
 	{
-		$this->config["output_path"] = rtrim($path, "/\\") . DIRECTORY_SEPARATOR;
+		$this->config["output_path"] = $this->preparePath($path);
 	}
 
 	/**
@@ -276,13 +286,6 @@ abstract class AbstractPacker
 	}
 
 	/**
-	 * Adds asset
-	 *
-	 * @param string $asset The file can be absolute path or relative to the input_path
-	 */
-	abstract protected function addAsset($asset);
-
-	/**
 	 * Returns list of all added assets.
 	 *
 	 * @return array
@@ -304,8 +307,6 @@ abstract class AbstractPacker
 
 		return file_exists($path) ? file_get_contents($path) : $this->dumpAssets();
 	}
-
-	abstract protected function dumpAssets();
 
 	/**
 	 * Saves packed and minified assets in a file with unique name.

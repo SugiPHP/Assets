@@ -13,42 +13,6 @@ use PHPUnit_Framework_TestCase;
 
 class JsPackerTest extends PHPUnit_Framework_TestCase
 {
-	public function testCreateConfig()
-	{
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output");
-		$js = new JsPacker($config);
-		$this->assertSame(array(__DIR__."/assets".DIRECTORY_SEPARATOR), $js->getInputPath());
-		$this->assertSame(__DIR__."/output".DIRECTORY_SEPARATOR, $js->getOutputPath());
-		// checks the default value of debug is FALSE
-		$this->assertFalse($js->getDebug());
-
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output", "debug" => true);
-		$js = new JsPacker($config);
-		$this->assertTrue($js->getDebug());
-	}
-
-	public function testConfigSetters()
-	{
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output", "debug" => true);
-		$js = new JsPacker($config);
-		// input path
-		$js->setInputPath(__DIR__."1");
-		$this->assertSame(array(__DIR__."1".DIRECTORY_SEPARATOR), $js->getInputPath());
-		$js->setInputPath(__DIR__."2".DIRECTORY_SEPARATOR);
-		$this->assertSame(array(__DIR__."2".DIRECTORY_SEPARATOR), $js->getInputPath());
-		// output path
-		$js->setOutputPath(__DIR__."3");
-		$this->assertSame(__DIR__."3".DIRECTORY_SEPARATOR, $js->getOutputPath());
-		$js->setOutputPath(__DIR__."4".DIRECTORY_SEPARATOR);
-		$this->assertSame(__DIR__."4".DIRECTORY_SEPARATOR, $js->getOutputPath());
-		// debug
-		$this->assertTrue($js->getDebug());
-		$js->setDebug(false);
-		$this->assertFalse($js->getDebug());
-		$js->setDebug(true);
-		$this->assertTrue($js->getDebug());
-	}
-
 	public function testAddingAssets()
 	{
 		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__);

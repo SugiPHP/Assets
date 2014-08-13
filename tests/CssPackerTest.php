@@ -13,41 +13,6 @@ use PHPUnit_Framework_TestCase;
 
 class CssPackerTest extends PHPUnit_Framework_TestCase
 {
-	public function testCreateConfig()
-	{
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output");
-		$css = new CssPacker($config);
-		$this->assertSame(array(__DIR__."/assets".DIRECTORY_SEPARATOR), $css->getInputPath());
-		$this->assertSame(__DIR__."/output".DIRECTORY_SEPARATOR, $css->getOutputPath());
-		// checks the default value of debug is FALSE
-		$this->assertFalse($css->getDebug());
-
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output", "debug" => true);
-		$css = new CssPacker($config);
-		$this->assertTrue($css->getDebug());
-	}
-
-	public function testConfigSetters()
-	{
-		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__."/output", "debug" => true);
-		$css = new CssPacker($config);
-		// input path
-		$css->setInputPath(__DIR__."1");
-		$this->assertSame(array(__DIR__."1".DIRECTORY_SEPARATOR), $css->getInputPath());
-		$css->setInputPath(__DIR__."2".DIRECTORY_SEPARATOR);
-		$this->assertSame(array(__DIR__."2".DIRECTORY_SEPARATOR), $css->getInputPath());
-		// output path
-		$css->setOutputPath(__DIR__."3");
-		$this->assertSame(__DIR__."3".DIRECTORY_SEPARATOR, $css->getOutputPath());
-		$css->setOutputPath(__DIR__."4".DIRECTORY_SEPARATOR);
-		$this->assertSame(__DIR__."4".DIRECTORY_SEPARATOR, $css->getOutputPath());
-		// debug
-		$this->assertTrue($css->getDebug());
-		$css->setDebug(false);
-		$this->assertFalse($css->getDebug());
-		$css->setDebug(true);
-		$this->assertTrue($css->getDebug());
-	}
 
 	public function testAddingAssets()
 	{
