@@ -9,7 +9,9 @@
 
 namespace SugiPHP\Assets;
 
-class CssPackerTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class CssPackerTest extends PHPUnit_Framework_TestCase
 {
 	public function testCreateConfig()
 	{
@@ -41,7 +43,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(__DIR__."4".DIRECTORY_SEPARATOR, $css->getOutputPath());
 		// debug
 		$this->assertTrue($css->getDebug());
-		$css->setDebug(false);		
+		$css->setDebug(false);
 		$this->assertFalse($css->getDebug());
 		$css->setDebug(true);
 		$this->assertTrue($css->getDebug());
@@ -117,7 +119,7 @@ class CssPackerTest extends \PHPUnit_Framework_TestCase
 		// $css = new CssPacker($config);
 		// $css->add("one.css");
 		// $fn1 = $css->getFileName();
-		
+
 		// // change last modified time
 		// touch(__DIR__."/assets".DIRECTORY_SEPARATOR."one.css");
 

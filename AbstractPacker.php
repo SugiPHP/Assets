@@ -201,7 +201,8 @@ abstract class AbstractPacker
 	/**
 	 * Add asset(s) file(s)
 	 *
-	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 * @param string|array $assets List of files or a single file. The file can be
+	 * absolute path or relative to the input_path
 	 */
 	public function add($assets)
 	{
@@ -211,7 +212,8 @@ abstract class AbstractPacker
 	/**
 	 * Add asset(s) file(s) only if they were not added to the list.
 	 *
-	 * @param string|array $assets List of files or a single file. The file can be absolute path or relative to the input_path
+	 * @param string|array $assets List of files or a single file. The file can be
+	 * absolute path or relative to the input_path
 	 */
 	public function addOnce($assets)
 	{
@@ -227,7 +229,7 @@ abstract class AbstractPacker
 				// Stack of paths
 				if (is_array($this->config["input_path"])) {
 					$assetFound = false;
-					foreach ($this->config["input_path"] as $input_path){
+					foreach ($this->config["input_path"] as $input_path) {
 						$fileName = $input_path . $asset;
 						if (file_exists($fileName)) {
 							$this->addSingleAsset($fileName, $addOnce);
@@ -236,7 +238,7 @@ abstract class AbstractPacker
 						}
 					}
 					// Throws an exception if an asset is not found
-					if ( ! $assetFound) {
+					if (!$assetFound) {
 						throw new \Exception("Could not find $asset");
 					}
 				} else { //single path
@@ -350,5 +352,4 @@ abstract class AbstractPacker
 
 		return false;
 	}
-
 }

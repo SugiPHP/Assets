@@ -19,10 +19,10 @@ class CssPacker extends AbstractPacker
 	 * Presets
 	 */
 	private $lessPresets = array();
-	
+
 	/**
 	 * CSSpacker constructor
-	 * 
+	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config)
@@ -69,8 +69,9 @@ class CssPacker extends AbstractPacker
 
 	protected function getAsseticFactory()
 	{
-		if(empty($this->config["input_path"][0]))
-			throw new \Exception ('Empty input path');
+		if (empty($this->config["input_path"][0])) {
+			throw new \Exception('Empty input path');
+		}
 		$factory = new AssetFactory($this->config["input_path"][0], $this->config["debug"]);
 		$factory->setDefaultOutput("");
 
@@ -80,15 +81,16 @@ class CssPacker extends AbstractPacker
 		// adding some filters to the filter manager
 		if ($this->config["less_filter"]) {
 			$lessphpFilter = new LessphpFilter();
-			if($this->lessPresets)
+			if ($this->lessPresets) {
 				$lessphpFilter->setPresets($this->lessPresets);
+			}
 			$fm->set("less", $lessphpFilter);
 		}
 		$fm->set("min", new CssMinFilter());
 
 		return $factory;
 	}
-	
+
 	/**
 	 * Set an array with presets
 	 * @param array $presets

@@ -15,7 +15,7 @@ class JsPacker extends AbstractPacker
 {
 	/**
 	 * JsPacker constructor
-	 * 
+	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config)
@@ -53,8 +53,9 @@ class JsPacker extends AbstractPacker
 
 	protected function getAsseticFactory()
 	{
-		if(empty($this->config["input_path"][0]))
-			throw new \Exception ('Empty input path');
+		if (empty($this->config["input_path"][0])) {
+			throw new \Exception("Empty input path");
+		}
 		$factory = new AssetFactory($this->config["input_path"][0], $this->config["debug"]);
 		$factory->setDefaultOutput("");
 

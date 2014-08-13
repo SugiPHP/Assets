@@ -9,7 +9,9 @@
 
 namespace SugiPHP\Assets;
 
-class JsPackerTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class JsPackerTest extends PHPUnit_Framework_TestCase
 {
 	public function testCreateConfig()
 	{
@@ -41,7 +43,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(__DIR__."4".DIRECTORY_SEPARATOR, $js->getOutputPath());
 		// debug
 		$this->assertTrue($js->getDebug());
-		$js->setDebug(false);		
+		$js->setDebug(false);
 		$this->assertFalse($js->getDebug());
 		$js->setDebug(true);
 		$this->assertTrue($js->getDebug());
@@ -117,7 +119,7 @@ class JsPackerTest extends \PHPUnit_Framework_TestCase
 		// $js = new JsPacker($config);
 		// $js->add("one.js");
 		// $fn1 = $js->getFileName();
-		
+
 		// // change last modified time
 		// touch(__DIR__."/assets".DIRECTORY_SEPARATOR."one.js");
 
