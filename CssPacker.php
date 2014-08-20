@@ -11,6 +11,7 @@ namespace SugiPHP\Assets;
 use Assetic\Factory\AssetFactory;
 use Assetic\FilterManager;
 use Assetic\Filter\LessphpFilter;
+use Assetic\Filter\ScssphpFilter;
 use Assetic\Filter\CssMinFilter;
 
 class CssPacker extends AbstractPacker
@@ -33,6 +34,7 @@ class CssPacker extends AbstractPacker
 		parent::__construct($config);
 		// Used to determine if we need to load LessPHP filter
 		$this->config["less_filter"] = false;
+		$this->config["scss_filter"] = false;
 	}
 
 	/**
@@ -43,6 +45,8 @@ class CssPacker extends AbstractPacker
 		// if it is a less file than we'll need LessPHP filter
 		if (strpos($asset, ".less") !== false) {
 			$this->config["less_filter"] = true;
+		} elseif (strpos($asset, ".scss") !== false) {
+			$this->config["scss_filter"] = true;
 		}
 	}
 
@@ -58,6 +62,8 @@ class CssPacker extends AbstractPacker
 		foreach ($this->assets as $asset) {
 			if (substr($asset, -5) === ".less") {
 				$filters[] = "less";
+			} elseif (substr($asset, -5) === ".scss") {
+				$filters[] = "scss";
 			}
 			$filters[] = "?min";
 			$assetObj = $factory->createAsset($asset, $filters);
@@ -85,6 +91,10 @@ class CssPacker extends AbstractPacker
 				$lessphpFilter->setPresets($this->lessPresets);
 			}
 			$fm->set("less", $lessphpFilter);
+		}
+		if ($this->config["scss_filter"]) {
+			$scssFilter = new ScssphpFilter();
+			$fm->set("scss", $scssFilter);
 		}
 		$fm->set("min", new CssMinFilter());
 

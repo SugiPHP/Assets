@@ -17,10 +17,12 @@
         "tedivm/jshrink": "0.5.*"
     },
     "require-dev": {
-        "leafo/lessphp": "dev-master"
+        "leafo/lessphp": "dev-master",
+        "leafo/scssphp": "dev-master"
     },
     "suggests": {
-        "leafo/lessphp": "Enables ability to work with less files"
+        "leafo/lessphp": "Enables ability to work with less files",
+        "leafo/scssphp": "Enables ability to work with SCSS files"
     },
     "autoload": {
         "psr-4": {

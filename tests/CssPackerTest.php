@@ -13,6 +13,14 @@ use PHPUnit_Framework_TestCase;
 
 class CssPackerTest extends PHPUnit_Framework_TestCase
 {
+	public function testAddScss()
+	{
+		$config = array("input_path" => __DIR__."/assets", "output_path" => __DIR__);
+		$css = new CssPacker($config);
+		// add asset
+		$css->add("test.scss");
+		$this->assertEquals(".foo{width:62.5%}", $css->dump());
+	}
 
 	public function testAddingAssets()
 	{
