@@ -48,7 +48,7 @@ class JsPacker extends AbstractPacker
 			$buffer .= $assetObj->dump();
 		}
 
-		return $buffer;
+		return ltrim($buffer);
 	}
 
 	protected function getAsseticFactory()
