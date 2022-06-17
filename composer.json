@@ -12,17 +12,11 @@
     ],
     "require": {
         "php": ">=5.3",
-        "kriswallsmith/assetic": "1.1.*",
-        "natxet/CssMin": "dev-master",
-        "tedivm/jshrink": "~1.0"
-    },
-    "require-dev": {
-        "leafo/lessphp": "dev-master",
-        "leafo/scssphp": "dev-master"
-    },
-    "suggests": {
-        "leafo/lessphp": "Enables ability to work with less files",
-        "leafo/scssphp": "Enables ability to work with SCSS files"
+        "assetic/framework": "^3.0.1",
+        "wikimedia/less.php": "~3.0.0",
+        "wikimedia/minify": "~2.2",
+        "scssphp/scssphp": "^1.0",
+        "meenie/javascript-packer": "^1.1"
     },
     "autoload": {
         "psr-4": {
