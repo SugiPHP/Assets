@@ -12,7 +12,7 @@ use Assetic\Factory\AssetFactory;
 use Assetic\FilterManager;
 use Assetic\Filter\LessphpFilter;
 use Assetic\Filter\ScssphpFilter;
-use Assetic\Filter\CssMinFilter;
+use Assetic\Filter\CSSMinFilter;
 
 class CssPacker extends AbstractPacker
 {
@@ -96,7 +96,7 @@ class CssPacker extends AbstractPacker
 			$scssFilter = new ScssphpFilter();
 			$fm->set("scss", $scssFilter);
 		}
-		$fm->set("min", new CssMinFilter());
+		$fm->set("min", new CSSMinFilter());
 
 		return $factory;
 	}
