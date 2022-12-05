@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.3",
         "assetic/framework": "^3.0.1",
-        "wikimedia/less.php": "~3.0.0",
+        "wikimedia/less.php": "^3.1.0",
         "wikimedia/minify": "~2.2",
         "scssphp/scssphp": "^1.0",
         "meenie/javascript-packer": "^1.1"
